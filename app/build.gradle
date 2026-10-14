@@ -1,0 +1,52 @@
+// عِبريت | Developer: Islam Dweikat (إسلام دويكات) | © 2026 Islam Dweikat
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "ps.islam.ivrit"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "ps.islam.ivrit"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        shared {
+            storeFile file("ivrit.keystore")
+            storePassword "ivrit2026"
+            keyAlias "ivrit"
+            keyPassword "ivrit2026"
+        }
+    }
+
+    buildTypes {
+        debug { signingConfig signingConfigs.shared }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.shared
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    androidResources {
+        noCompress += ["js", "html"]
+    }
+}
+
+dependencies {
+    implementation "androidx.webkit:webkit:1.11.0"
+}
