@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,9 +29,22 @@ jobs:
       - name: Rename APK
         run: |
           VER=$(grep -oP 'versionName "\K[^"]+' app/build.gradle)
-          mv app/build/outputs/apk/release/app-release.apk "islam-dweikat-ivrit-v${VER}.apk"
+          echo "VER=$VER" >> $GITHUB_ENV
+          cp app/build/outputs/apk/release/app-release.apk "islam-dweikat-ivrit-v${VER}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "ivrit.apk"
 
       - uses: actions/upload-artifact@v4
         with:
           name: islam-dweikat-ivrit
           path: islam-dweikat-ivrit-v*.apk
+
+      - name: Publish release (direct download link)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VER }}
+          name: عِبريت v${{ env.VER }}
+          body: "حمّل ملف ivrit.apk وثبّته على هاتفك."
+          make_latest: true
+          files: |
+            ivrit.apk
+            islam-dweikat-ivrit-v*.apk
